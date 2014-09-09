@@ -1,3 +1,9 @@
+//Authors: Peter Hanson and Desone Burns
+
+//The purpose of this class is to provide a blueprint to create Map objects which contain information
+//about the state of the game's map such as the position of the hunter, pits, wumpus, etc.
+
+
 package huntTheWumpus;
 
 import java.awt.Point;
@@ -6,56 +12,62 @@ import java.util.Random;
 public class Map 
 {
 	private Room[][] map;
-	private Point wumpus;
-	private Point hunter;
+	private Point wumpus; //the x is the vertical variable (0-vertSize) and the y is the horizontal variable (0-horizSize)
+	private Point hunter; //this is backwards from cartesian system but all the code was already in that orientation
 	private Point[] pit;
-	private int horizSize = 10;
-	private int vertSize = 10;
+	public static int horizSize = 10;
+	public static int vertSize = 10;
+	private Point arrow;
 	
 	Map()
 	{
-		map = new Room[horizSize][vertSize];
+		map = new Room[vertSize][horizSize];
 		Random randy = new Random();
 		pit = new Point[randy.nextInt(3) + 3];
 		
-		System.out.println("Generated " + pit.length + " pits.");
+		//System.out.println("Generated " + pit.length + " pits."); only needed statement for testing
 		
 		
-		hunter = new Point(randy.nextInt(horizSize), randy.nextInt(vertSize));
-		wumpus = new Point(randy.nextInt(horizSize), randy.nextInt(vertSize));
+		hunter = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+		wumpus = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
 		
 		for(int i = 0; i < pit.length; i++) 
 		
-			pit[i] = new Point(randy.nextInt(horizSize), randy.nextInt(vertSize));
+			pit[i] = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
 		
 		while(inRange(wumpus, hunter, 3)) //If the generated wumpus coords are less than 2 blocks away, re-randomize them.
-			wumpus = new Point(randy.nextInt(horizSize), randy.nextInt(vertSize));
-		
+			wumpus = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+		int i = 0;
 		for(Point point : pit) //Makes sure all the generated pits aren't sitting on top of each other or other objects (not including blood, goop, or slime)
 		{
-			int i = 0;
 			boolean tooClose = false;
 			for(int j = 0; j < i; j++)
 				if(inRange(point, pit[j], 1))
 					tooClose = true;
+			int endless = 0;
 			while(inRange(point, hunter, 2) || inRange(point, wumpus, 1) || tooClose)
-			{
-				point = new Point(randy.nextInt(horizSize), randy.nextInt(vertSize));
+			{//The hunter occasionally starts in slime which shouldn't happen
+				point = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+				pit[i] = point;
+				tooClose = false;
 				for(int j = 0; j < i; j++)
 					if(inRange(point, pit[j], 1))
 						tooClose = true;
+				endless++;
+				if(endless == 20)
+				{
+					hunter = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+					wumpus = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+				}
 			}
 			
 			i++;
 		}
-		
-		
-		System.out.println("Wumpus x coord: " + wumpus.x);  //Where da Wumpus at doe?
-		System.out.println("Wumpus y coord: " + wumpus.y); 
-		
-		for(int j = 0; j < horizSize; j++) //Set all the attributes for all the "rooms." 
+	
+		i = 0;
+		for(int j = 0; j < vertSize; j++) //Set all the attributes for all the "rooms." 
 		{
-			for(int i = 0; i < vertSize; i++)
+			for(i = 0; i < horizSize; i++)
 			{
 				map[j][i] = new Room();
 				Point temp = new Point(j, i);
@@ -86,11 +98,13 @@ public class Map
 	public String toString() //Generates the string that is the map
 	{
 		String output = "";
-		for(int j = 0; j < horizSize; j++)
+		for(int i = 0; i < 30; i++)
+			System.out.println();//Simulates clearing the screen
+		for(int j = 0; j < vertSize; j++)
 		{
-			for(int i = 0; i < vertSize; i++)
+			for(int i = 0; i < horizSize; i++)
 			{
-				output += "[" + map[j][i] + "]";
+				output += "[" + map[j][i].toString() + "]";
 			}
 			output += "\n";
 		}
@@ -106,13 +120,13 @@ public class Map
 		
 		Point temp = new Point(reference.x, reference.y);
 
-		if(horizSize - reference.x <= distance ) //If the point is on either extreme, it simulates it being on the opposite end of the map
+		if(vertSize - reference.x <= distance ) //If the point is on either extreme, it simulates it being on the opposite end of the map
 			
-			temp.x -= horizSize;
+			temp.x -= vertSize;
 		
 		else if(reference.x <= distance )
 			
-			temp.x += horizSize;
+			temp.x += vertSize;
 		
 		if(temp.distance(interest) <= distance)
 		
@@ -121,13 +135,13 @@ public class Map
 		
 		temp.x = reference.x; //Set the x coordinate back, so that y is not affected by the previous movement of x to the other side
 		
-		if(vertSize - reference.y <= distance )
+		if(horizSize - reference.y <= distance )
 			
-			temp.y -= vertSize;
+			temp.y -= horizSize;
 		
 		else if( reference.y <= distance )
 			
-			temp.y += vertSize;
+			temp.y += horizSize;
 		
 		if(temp.distance(interest) <= distance)
 		
@@ -136,4 +150,203 @@ public class Map
 		return false;	
 		
 	}
+	
+	public Point getHunterLocation()
+	{
+		for(int i = 0; i < vertSize; i++)
+		{
+			for(int j = 0; j < horizSize; j++)
+			{
+				if(map[i][j].containsHunter())
+					return new Point(i, j);
+			}
+		}
+		return new Point(0,0); //Will never happen, just a default for java to compile properly
+	}
+
+	public void updateHunter(Point position)
+	{
+		hunter = position;
+		for(int i = 0; i < vertSize; i++)
+		{
+			for(int j = 0; j < horizSize; j++)
+			{
+				if(i == position.x && j == position.y)
+				{
+					map[i][j].enableHunter();
+					map[i][j].enableExplored();
+				}
+				else
+					map[i][j].disableHunter();
+			}
+		}
+		
+	}
+
+	public boolean updateArrow(String direction, Point hunterPosition)
+	{
+		if(direction == "North" || direction == "South")
+		{
+			int a = hunterPosition.y;
+			for(int j = 0; j < vertSize; j++)
+			{
+				if(map[j][a].containsWumpus())
+				{
+					return true;
+				}
+			}
+		}
+		if(direction == "East" || direction == "West")
+		{
+			int a = hunterPosition.x;
+			for(int j = 0; j < horizSize; j++)
+			{
+				if(map[a][j].containsWumpus())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void clearFog() 
+	{
+		for(int i = 0; i < vertSize; i++)
+		{
+			for(int j = 0; j < horizSize; j++)
+			{
+				map[i][j].enableExplored();
+			}
+		}
+	}
+
+	public int roomMessage()
+	{
+		if(map[hunter.x][hunter.y].containsWumpus())
+			return 5;
+		if(map[hunter.x][hunter.y].containsPit())
+			return 4;
+		if(map[hunter.x][hunter.y].containsGoop())
+			return 2;
+		if(map[hunter.x][hunter.y].containsBlood())
+			return 1;
+		if(map[hunter.x][hunter.y].containsSlime())
+			return 3;
+		if(map[hunter.x][hunter.y].containsBat())
+			return 6;
+		return 0;
+	}
+
+	
+	public void initialArrow(Point hunterLocation)
+	{
+		arrow = hunterLocation;
+	}
+	
+	public boolean animateArrow(String direction) 
+	{
+		
+		if(direction.equals("North"))
+		{
+			arrow = new Point(arrow.x -1, arrow.y);
+			boolean wrap = false;
+			if(arrow.x < 0)
+			{
+				arrow = new Point(horizSize-1, arrow.y);
+				wrap = true;
+			}
+			map[arrow.x][arrow.y].enableExplored();
+			map[arrow.x][arrow.y].enableVArrow();
+			if(wrap)
+				map[0][arrow.y].disableVArrow();
+			else
+				map[arrow.x+1][arrow.y].disableVArrow();
+
+			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.x == hunter.x)
+			{
+				map[arrow.x][arrow.y].disableVArrow();
+				return false;
+			}
+			return true;
+		}
+		if(direction.equals("South"))
+		{
+			arrow = new Point(arrow.x + 1, arrow.y);
+			boolean wrap = false;
+			if(arrow.x >= horizSize )
+			{
+				arrow = new Point(0, arrow.y);
+				wrap = true;
+			}
+			
+			map[arrow.x][arrow.y].enableExplored();
+			map[arrow.x][arrow.y].enableVArrow();
+			
+			if(wrap)
+				map[horizSize - 1][arrow.y].disableVArrow();
+			else
+				map[arrow.x - 1][arrow.y].disableVArrow();
+
+			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.x == hunter.x)
+			{
+				map[arrow.x][arrow.y].disableVArrow();
+				return false;
+			}
+			return true;
+		}
+		if(direction.equals("East"))
+		{
+			arrow = new Point(arrow.x, arrow.y + 1);
+			boolean wrap = false;
+			if(arrow.y >=  vertSize )
+			{
+				arrow = new Point(arrow.x, 0);
+				wrap = true;
+			}
+			
+			map[arrow.x][arrow.y].enableExplored();
+			map[arrow.x][arrow.y].enableHArrow();
+			
+			if(wrap)
+				map[arrow.x][vertSize - 1].disableHArrow();
+			else
+				map[arrow.x][arrow.y - 1].disableHArrow();
+
+			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.y == hunter.y)
+			{
+				map[arrow.x][arrow.y].disableHArrow();
+				return false;
+			}
+			return true;
+		}
+		
+		if(direction.equals("West"))
+		{
+			arrow = new Point(arrow.x, arrow.y - 1);
+			boolean wrap = false;
+			if(arrow.y < 0 )
+			{
+				arrow = new Point(arrow.x, vertSize - 1);
+				wrap = true;
+			}
+		
+			map[arrow.x][arrow.y].enableExplored();
+			map[arrow.x][arrow.y].enableHArrow();
+		
+			if(wrap)
+				map[arrow.x][0].disableHArrow();
+			else
+				map[arrow.x][arrow.y + 1].disableHArrow();
+
+			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.y == hunter.y)
+			{
+				map[arrow.x][arrow.y].disableHArrow();
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+		
 }
