@@ -36,15 +36,15 @@ public class Game {
 				System.out.println("xx|   __   |x|  |xx|  |x|  |\\    |xxx|   |xxxxxxxx|   |xxx|   __   |x|  |xxxxxx");
 				System.out.println("xx|  |xx|  |x|        |x|  |x\\   |xxx|   |xxxxxxxx|   |xxx|  |xx|  |x|      |xx");
 				System.out.println("xx|__|xx|__|xx\\______/xx|__|xx\\__|xxx|___|xxxxxxxx|___|xxx|__|xx|__|x|______|xx"); 
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
-				System.out.println("xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxx" );
-				System.out.println("xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxx");
-				System.out.println("xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxx");
-				System.out.println("xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxx" );
-				System.out.println("xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxx" );
-				System.out.println("xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxx" );
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n");
+				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
+				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
+				System.out.println("xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxxx" );
+				System.out.println("xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxxx");
+				System.out.println("xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxxx");
+				System.out.println("xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxxx" );
+				System.out.println("xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxxx" );
+				System.out.println("xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxxx" );
+				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		
 	//	System.out.println(logo);
 		
@@ -52,7 +52,7 @@ public class Game {
 					+ "\nbottomless pits and warped space-time properties. Slime is one square away"
 					+ "\nfrom the pits, blood is up to 2 squares away from the wumpus. Goo is the "
 					+ "\nmixture of both. You only have one arrow to shoot, if you miss you are dead." + 
-				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, \nand 'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
+				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, and 'a' to \nshoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
 		for(int i = 0; i < desc.length(); i++)
 		{
 			System.out.print(desc.charAt(i));
@@ -112,7 +112,7 @@ public class Game {
 			}
 			
 			System.out.println("You are facing " + hunter.getOrientation());
-			System.out.println("Where would you like to move?");
+			System.out.print("Where would you like to move?");
 			movement = key.next();
 			
 			switch(movement)

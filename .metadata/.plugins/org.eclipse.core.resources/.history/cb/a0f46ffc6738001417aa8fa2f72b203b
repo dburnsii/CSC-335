@@ -52,7 +52,7 @@ public class Game {
 					+ "\nbottomless pits and warped space-time properties. Slime is one square away"
 					+ "\nfrom the pits, blood is up to 2 squares away from the wumpus. Goo is the "
 					+ "\nmixture of both. You only have one arrow to shoot, if you miss you are dead." + 
-				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, \nand 'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
+				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, and \n'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
 		for(int i = 0; i < desc.length(); i++)
 		{
 			System.out.print(desc.charAt(i));
@@ -112,7 +112,7 @@ public class Game {
 			}
 			
 			System.out.println("You are facing " + hunter.getOrientation());
-			System.out.println("Where would you like to move?");
+			System.out.print("Where would you like to move?");
 			movement = key.next();
 			
 			switch(movement)

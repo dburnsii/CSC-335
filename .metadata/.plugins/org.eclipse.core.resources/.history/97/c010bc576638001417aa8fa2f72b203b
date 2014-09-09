@@ -29,30 +29,30 @@ public class Game {
 		String movement;
 		int roomMessageCode;
 		
-		 	System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); 
-				System.out.println("xx|  |XX|  |x|  |xx|  |x|  \\xx|  |x|       |xxx|        |x|  |XX|  |x|   ___|xx");
-				System.out.println("xx|  |xx|  |x|  |xx|  |x|   \\x|  |x|       |xxx|        |x|  |XX|  |x|  |xxxxxx"); 
-				System.out.println("xx|        |x|  |xx|  |x|    \\|  |xxx|   |xxxxxxxx|   |xxx|        |x|   __|xxx");
-				System.out.println("xx|   __   |x|  |xx|  |x|  |\\    |xxx|   |xxxxxxxx|   |xxx|   __   |x|  |xxxxxx");
-				System.out.println("xx|  |xx|  |x|        |x|  |x\\   |xxx|   |xxxxxxxx|   |xxx|  |xx|  |x|      |xx");
-				System.out.println("xx|__|xx|__|xx\\______/xx|__|xx\\__|xxx|___|xxxxxxxx|___|xxx|__|xx|__|x|______|xx"); 
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" );
-				System.out.println("xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxx" );
-				System.out.println("xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxx");
-				System.out.println("xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxx");
-				System.out.println("xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxx" );
-				System.out.println("xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxx" );
-				System.out.println("xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxx" );
-				System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n");
+		logo = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n" + 
+"|  |XX|  |xx|  |xx|  |xx|  \\xx|  |xx|       |xxx|        |xx|  |XX|  |xx|   ___|\n" +
+"|  |xx|  |xx|  |xx|  |xx|   \\x|  |xx|       |xxx|        |xx|  |XX|  |xx|  |xxxx\n" + 
+"|        |xx|  |xx|  |xx|    \\|  |xxxx|   |xxxxxxxx|   |xxxx|        |xx|   __|x\n" +
+"|   __   |xx|  |xx|  |xx|  |\\    |xxxx|   |xxxxxxxx|   |xxxx|   __   |xx|  |xxxx\n" +
+"|  |xx|  |xx|        |xx|  |x\\   |xxxx|   |xxxxxxxx|   |xxxx|  |xx|  |xx|      |\n" +
+"|__|xx|__|xxx\\______/xxx|__|xx\\__|xxxx|___|xxxxxxxx|___|xxxx|__|xx|__|xx|______|\n" + 
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n" +
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n" +
+"xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxxx\n" +
+"xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxxx\n" +
+"xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxxx\n" +
+"xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxxx\n" +
+"xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxxx\n" +
+"xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxxx\n" +
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n";
 		
-	//	System.out.println(logo);
+		System.out.println(logo);
 		
 		String desc = "You are a brave hunter searching for the elusive wumpus in a cave containing"
 					+ "\nbottomless pits and warped space-time properties. Slime is one square away"
 					+ "\nfrom the pits, blood is up to 2 squares away from the wumpus. Goo is the "
 					+ "\nmixture of both. You only have one arrow to shoot, if you miss you are dead." + 
-				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, \nand 'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
+				"\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, and 'a' to \nshoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
 		for(int i = 0; i < desc.length(); i++)
 		{
 			System.out.print(desc.charAt(i));
@@ -112,7 +112,7 @@ public class Game {
 			}
 			
 			System.out.println("You are facing " + hunter.getOrientation());
-			System.out.println("Where would you like to move?");
+			System.out.print("Where would you like to move?");
 			movement = key.next();
 			
 			switch(movement)

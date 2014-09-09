@@ -112,7 +112,7 @@ public class Game {
 			}
 			
 			System.out.println("You are facing " + hunter.getOrientation());
-			System.out.println("Where would you like to move?");
+			System.out.print("Where would you like to move?");
 			movement = key.next();
 			
 			switch(movement)
