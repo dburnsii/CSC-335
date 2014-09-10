@@ -23,10 +23,13 @@ public class Map
 	{
 		map = new Room[vertSize][horizSize];
 		Random randy = new Random();
-		pit = new Point[randy.nextInt(3) + 3]; //Generates random amount of pits, from 3-5
+		pit = new Point[randy.nextInt(3) + 3];
 		
-		hunter = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize)); //Puts hunter in random location
-		wumpus = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize)); //Puts wumpus in random location
+		//System.out.println("Generated " + pit.length + " pits."); only needed statement for testing
+		
+		
+		hunter = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
+		wumpus = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
 		
 		for(int i = 0; i < pit.length; i++) 
 		
@@ -43,7 +46,7 @@ public class Map
 					tooClose = true;
 			int endless = 0;
 			while(inRange(point, hunter, 2) || inRange(point, wumpus, 1) || tooClose)
-			{
+			{//The hunter occasionally starts in slime which shouldn't happen
 				point = new Point(randy.nextInt(vertSize), randy.nextInt(horizSize));
 				pit[i] = point;
 				tooClose = false;
@@ -182,16 +185,32 @@ public class Map
 
 	public boolean updateArrow(String direction, Point hunterPosition)
 	{
-		if(direction == "North" || direction == "South") //If the arrow is shot north or south, its bound to hit the Wumpus, if it has the same y
-			if( hunterPosition.y == wumpus.y)
-				return true;
+		if(direction == "North" || direction == "South")
+		{
+			int a = hunterPosition.y;
+			for(int j = 0; j < vertSize; j++)
+			{
+				if(map[j][a].containsWumpus())
+				{
+					return true;
+				}
+			}
+		}
 		if(direction == "East" || direction == "West")
-			if( hunterPosition.x == wumpus.x)
-				return true;
+		{
+			int a = hunterPosition.x;
+			for(int j = 0; j < horizSize; j++)
+			{
+				if(map[a][j].containsWumpus())
+				{
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
-	public void clearFog()  //Marks all rooms as explored, so everything is visible
+	public void clearFog() 
 	{
 		for(int i = 0; i < vertSize; i++)
 		{
@@ -202,7 +221,7 @@ public class Map
 		}
 	}
 
-	public int roomMessage() //Returns what's in the room, with dangerous objects taking priority
+	public int roomMessage()
 	{
 		if(map[hunter.x][hunter.y].containsWumpus())
 			return 5;
@@ -220,31 +239,31 @@ public class Map
 	}
 
 	
-	public void initialArrow(Point hunterLocation) //Sets the arrow's initial location, which is of course wherever the hunter is
+	public void initialArrow(Point hunterLocation)
 	{
 		arrow = hunterLocation;
 	}
 	
-	public boolean animateArrow(String direction) //Gives the arrow some animation, works best in windows console.
+	public boolean animateArrow(String direction) 
 	{
-		if(direction.equals("North")) //Methods are essentially the same for all directions with different direction and axes 
+		
+		if(direction.equals("North"))
 		{
-			arrow = new Point(arrow.x - 1, arrow.y); //Move the arrow each time we call the method
-			boolean wrap = false; 
-			if(arrow.x < 0) //If the arrow has reached the edge, wrap it
+			arrow = new Point(arrow.x -1, arrow.y);
+			boolean wrap = false;
+			if(arrow.x < 0)
 			{
-				arrow = new Point(horizSize - 1, arrow.y); 
+				arrow = new Point(horizSize-1, arrow.y);
 				wrap = true;
 			}
-			map[arrow.x][arrow.y].enableExplored(); //Our arrow is flaming, so wherever it has traveled, we have seen
-			map[arrow.x][arrow.y].enableVArrow(); //Put an arrow in the room
-			if(wrap) //if the arrow has wrapped, disable the only exception
+			map[arrow.x][arrow.y].enableExplored();
+			map[arrow.x][arrow.y].enableVArrow();
+			if(wrap)
 				map[0][arrow.y].disableVArrow();
-			else //otherwise, disable the one behind current arrow
+			else
 				map[arrow.x+1][arrow.y].disableVArrow();
 
-			//if our arrow is in the same place as the Wumpus or the Hunter, end animation
-			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.x == hunter.x) 
+			if((arrow.x == wumpus.x && arrow.y == wumpus.y) || arrow.x == hunter.x)
 			{
 				map[arrow.x][arrow.y].disableVArrow();
 				return false;

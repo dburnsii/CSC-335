@@ -13,8 +13,7 @@ public class Hunter {
 	private boolean arrow; //True if the hunter still has his arrow ready
 	private String orientation; //North, South, East, or West. Matters for arrow path.
 	
-	public Hunter(Point initialLocation)
-	{
+	public Hunter(Point initialLocation){
 		position = initialLocation;
 		arrow = true;
 		orientation = "North";
@@ -30,10 +29,9 @@ public class Hunter {
 		return orientation;
 	}
 	
-	//Changes orientation and position based on input from Game class
 	public void moveUp()
 	{
-		position.x = (position.x - 1 + Map.vertSize) % Map.vertSize; //Genius idea for wrapping Peter, I made mine way too complicated in retrospect
+		position.x = (position.x - 1 + Map.vertSize) % Map.vertSize;
 		orientation = "North";
 	}
 	
@@ -62,8 +60,7 @@ public class Hunter {
 		
 	}
 
-	public boolean hasArrow() 
-	{
+	public boolean hasArrow() {
 		return arrow;
 	}
 	
