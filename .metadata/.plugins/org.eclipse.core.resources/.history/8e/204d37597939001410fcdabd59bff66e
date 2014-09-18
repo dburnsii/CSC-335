@@ -1,0 +1,62 @@
+//Authors: Peter Hanson and Desone Burns
+
+//The purpose of this class is to test and insure that the classes in this package are working properly with
+//Junit testing.
+
+//No longer needed, game has a main method.
+
+package huntTheWumpus;
+
+import static org.junit.Assert.*;
+
+import java.awt.Point;
+
+import org.junit.Test;
+
+public class GameTest 
+{
+
+	@Test
+	public void testRoom()
+	{
+		Map map = new Map();
+		System.out.println(map.toString());
+	}
+	
+	@Test
+	public void testSlime()
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(5,5), new Point(0,0), pits);
+		map.updateHunter(new Point(6,5));
+		assertTrue(map.toString().contains("[S]"));
+	}
+	
+	@Test
+	public void testBlood()
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(0,2), new Point(0,0), pits);
+		map.updateHunter(new Point(0,3));
+		assertTrue(map.toString().contains("[B]"));
+	}
+	
+	@Test
+	public void testPit()
+	{
+		Point[] pits = {new Point(5,5), new Point(7,7)};
+		Map map = new Map(new Point(5,5), new Point(0,0), pits);
+		map.updateHunter(new Point(6,5));
+		assertTrue(map.toString().contains("[P]"));
+	}
+	
+	@Test
+	public void testWumpus()
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(0,0), new Point(0,0), pits);
+		map.updateHunter(new Point(0,1));
+		assertTrue(map.toString().contains("[S]"));
+	}
+
+}

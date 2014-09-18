@@ -12,19 +12,26 @@ import java.util.Scanner;
 
 public class Game
 {
-
+	
+	private static Map gameMap; //ALL PUBLIC VARIABLES ARE USED ONLY FOR JUNIT TESTING (Would not appear in real game)
+	private static boolean pitDeath;
+	private static boolean wumpusDeath;
+	private static boolean gameOver;
+	private static boolean gameWon;
+	private static Hunter hunter;
+	
 	public static void main(String[] args) throws IOException
 	{
-		Map gameMap = new Map();
-		Hunter hunter = new Hunter(gameMap.getHunterLocation());
+		gameMap = new Map();
+		hunter = new Hunter(gameMap.getHunterLocation());
 
-		boolean gameOver = false;
-		boolean gameWon = false;
-		boolean pitDeath = false;
-		boolean wumpusDeath = false;
+		gameOver = false;
+		gameWon = false;
+		pitDeath = false;
+		wumpusDeath = false;
 		String textMap;
 		Scanner key = new Scanner(System.in);
-		String movement;
+		char movement;
 		int roomMessageCode;
 
 		// This prints the 'graphic' for the game, before it starts
@@ -76,8 +83,7 @@ public class Game
 				gameMap.clearFog();
 				textMap = gameMap.toString();
 				System.out.print(textMap);
-				System.out
-						.println("You have fallen into a bottomless pit!! Enviornmental damage too stronk!");
+				System.out.println("You have fallen into a bottomless pit!! Enviornmental damage too stronk!");
 				break;
 			} 
 			// If the player has run into the Wumpus,
@@ -129,26 +135,26 @@ public class Game
 			{
 				System.out.println("You are facing " + hunter.getOrientation());
 				System.out.println("Where would you like to move?");
-				movement = key.next();
+				movement = key.next().charAt(0);
 				switch (movement)
 				{
-				case "u":
+				case 'u':
 					hunter.moveUp();
 					gameMap.updateHunter(hunter.getPosition());
 					break;
-				case "d":
+				case 'd':
 					hunter.moveDown();
 					gameMap.updateHunter(hunter.getPosition());
 					break;
-				case "l":
+				case 'l':
 					hunter.moveLeft();
 					gameMap.updateHunter(hunter.getPosition());
 					break;
-				case "r":
+				case 'r':
 					hunter.moveRight();
 					gameMap.updateHunter(hunter.getPosition());
 					break;
-				case "a":
+				case 'a':
 					gameMap.initialArrow(hunter.getPosition());
 					while (gameMap.animateArrow(hunter.getOrientation())) //animates the arrow before resolving the result
 					{

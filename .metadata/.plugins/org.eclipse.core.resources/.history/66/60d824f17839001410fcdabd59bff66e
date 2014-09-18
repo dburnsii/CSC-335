@@ -1,0 +1,36 @@
+//Authors: Peter Hanson and Desone Burns
+
+//The purpose of this class is to test and insure that the classes in this package are working properly with
+//Junit testing.
+
+//No longer needed, game has a main method.
+
+package huntTheWumpus;
+
+import static org.junit.Assert.*;
+
+import java.awt.Point;
+
+import org.junit.Test;
+
+public class GameTest 
+{
+
+	@Test
+	public void testRoom()
+	{
+		Map map = new Map();
+		System.out.println(map.toString());
+	}
+	
+	@Test
+	public void testPit()
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(5,5), new Point(0,0), pits);
+		map.updateHunter(new Point(4,5));
+		System.out.println(map.toString());
+		assertTrue(map.toString().contains("You have fallen into a bottomless pit!! Enviornmental damage too stronk!"));
+	}
+
+}

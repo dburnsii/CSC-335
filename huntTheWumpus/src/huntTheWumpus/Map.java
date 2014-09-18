@@ -92,6 +92,43 @@ public class Map
 		}
 	}
 	
+	
+	Map(Point hunter, Point wumpus, Point[] pit)
+	{
+		map = new Room[vertSize][horizSize];
+		this.hunter = hunter;
+		this.wumpus = wumpus;
+		arrow = hunter;
+		for(int j = 0; j < vertSize; j++)
+		{
+			for(int i = 0; i < horizSize; i++)
+			{
+				map[j][i] = new Room();
+				Point temp = new Point(j, i);
+				if(hunter.equals(temp))
+				{
+					map[j][i].enableHunter();
+					map[j][i].enableExplored();
+				}
+				if(wumpus.equals(temp)) 
+				{
+					map[j][i].enableWumpus();
+				}
+				if(inRange(temp, wumpus, 2))
+				{
+					map[j][i].enableBlood();
+				}
+				for(Point point : pit)
+				{
+					if(point.equals(temp))
+						map[j][i].enablePit();
+					if(inRange(temp, point, 1))
+						map[j][i].enableSlime();
+				}
+			}
+		}
+	}
+	
 	public String toString() //Generates the string that is the map
 	{
 		String output = "";

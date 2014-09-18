@@ -1,0 +1,159 @@
+//Authors: Peter Hanson and Desone Burns
+
+//The purpose of this class is to test and insure that the classes in this package are working properly with
+//Junit testing.
+
+//No longer needed, game has a main method.
+
+package huntTheWumpus;
+
+import static org.junit.Assert.*;
+
+import java.awt.Point;
+
+import org.junit.Test;
+
+public class GameTest 
+{
+
+	@Test
+	public void testRoom() //Makes sure the map starts with a hunter
+	{
+		Map map = new Map();
+		assertTrue(map.toString().contains("[O]"));
+	}
+	
+	@Test
+	public void testSlime() //Makes sure slimes appear as they should, when the hunter moves off of them
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(5,5), new Point(0,0), pits);
+		map.updateHunter(new Point(6,5));
+		assertTrue(map.toString().contains("[S]"));
+	}
+	
+	@Test
+	public void testBlood() //Makes sure blood appears as it should, when the hunter moves off of it
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(0,2), new Point(0,0), pits);
+		map.updateHunter(new Point(0,3));
+		assertTrue(map.toString().contains("[B]"));
+	}
+	
+	@Test
+	public void testGoop()//Makes sure goop appears as it should, when the hunter moves off of it
+	{
+		Point[] pits = {new Point(0,3), new Point(7,7)};
+		Map map = new Map(new Point(0,2), new Point(0,0), pits);
+		map.updateHunter(new Point(1,2));
+		assertTrue(map.toString().contains("[G]"));
+	}
+	
+	@Test
+	public void testPit() //Makes sure pits appear as they should, when the hunter moves off of them (wouldn't happen)
+	{
+		Point[] pits = {new Point(5,5), new Point(7,7)};
+		Map map = new Map(new Point(5,5), new Point(0,0), pits);
+		map.updateHunter(new Point(6,5));
+		assertTrue(map.toString().contains("[P]"));
+	}
+	
+	@Test
+	public void testWumpus() //Makes sure the wumpus appears as it should, when the hunter moves off of it (wouldn't happen)
+	{
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		Map map = new Map(new Point(0,0), new Point(0,0), pits);
+		map.updateHunter(new Point(0,1));
+		assertTrue(map.toString().contains("[W]"));
+	}
+	
+	@Test
+	public void testPitDeath() //Verifies that the player dies when they fall into a pit
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(5,5), new Point(0,0), pits);
+		gameMap.updateHunter(new Point(4,5));
+		assertEquals(4, gameMap.roomMessage()); //The Map classes uses codes to represent the room, the Game class interprets this as a death
+	}
+	
+	@Test
+	public void testWumpusDeath() //Makes sure the player dies when going into pits
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(0,1), new Point(0,0), pits);
+		gameMap.updateHunter(new Point(0,0));
+		assertEquals(5, gameMap.roomMessage()); //Same deal as above test
+	}
+	
+	@Test
+	public void testSlimeSpawn() //Runs 1000 tests that move the player off original position to verify they never spawn on slime
+	{
+		boolean spawnedOnSlime = false;
+		Map game;
+		for(int i = 0; i < 1000; i++)
+		{
+			game = new Map();
+			game.updateHunter(new Point(0,0));
+			if(game.toString().contains("[S]"))
+				spawnedOnSlime = true;
+		}
+		assertFalse(spawnedOnSlime);
+	}
+	
+	@Test
+	public void testBloodSpawn() //Runs 1000 tests that move the player off original position to verify they never spawn on blood
+	{
+		boolean spawnedOnBlood = false;
+		Map game;
+		for(int i = 0; i < 1000; i++)
+		{
+			game = new Map();
+			game.updateHunter(new Point(0,0));
+			if(game.toString().contains("[B]"))
+				spawnedOnBlood = true;
+		}
+		assertFalse(spawnedOnBlood);
+	}
+	
+	@Test
+	public void testArrowWest() //Shoots and arrow and determines if it hits
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(0,5), new Point(0,0), pits);
+		assertTrue(gameMap.updateArrow("West", new Point(0, 5)));
+	}
+	
+	@Test
+	public void testArrowNorth() //Same deal as above
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(0,5), new Point(0,0), pits);
+		assertTrue(gameMap.updateArrow("North", new Point(5, 0)));
+	}
+	
+	@Test
+	public void testArrowWestFail() //Shoots and arrow and determines if it misses
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(0,5), new Point(0,0), pits);
+		assertFalse(gameMap.updateArrow("West", new Point(1, 5)));
+	}
+	
+	@Test
+	public void testArrowNorthFail() //Same deal as above
+	{
+		Map gameMap = new Map();
+		Point[] pits = {new Point(4,5), new Point(7,7)};
+		gameMap =  new Map(new Point(0,5), new Point(0,0), pits);
+		assertFalse(gameMap.updateArrow("North", new Point(5, 1)));
+	}
+	
+	
+
+}
