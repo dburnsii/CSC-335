@@ -366,5 +366,10 @@ public class Map
 		}
 		return false;
 	}
+	
+	public Room getRoom(Point location)
+	{
+		return map[location.x][location.y];
+	}
 		
 }

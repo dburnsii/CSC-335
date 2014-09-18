@@ -5,10 +5,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -19,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-public class wumpusGUI extends JFrame
+public class wumpusGUI extends JFrame implements Observer
 {
 	private JPanel graphicalView;
 	private JPanel textView;
@@ -35,13 +39,18 @@ public class wumpusGUI extends JFrame
 	private JButton leftButton;
 	private JButton fireButton;
 	private ImageIcon[][] graphicMap;
+	private Game game;
+	private Map gameMap;
+	
 
-	public wumpusGUI(Point hunter)
+	public wumpusGUI(Map gameMap, final Game game)
 	{
 		setTitle("Hunt the Wumpus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
-
+		this.gameMap =gameMap;
+		this.game = game;
+		
 		gameView = new JTabbedPane();
 
 		setSize(1000, 700);
@@ -50,33 +59,18 @@ public class wumpusGUI extends JFrame
 		graphicalView.setBackground(Color.BLACK);
 		graphicalView.setLayout(new GridLayout(10, 10));
 		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
-		int hunterLoc = (hunter.x * 10) + hunter.y;
-		for(int i = 0; i < 100; i++)
+		Point hunterLoc = gameMap.getHunterLocation();
+		for(int i = 0; i < 10; i++)
 		{
-		if(i == hunterLoc)
-		{
-			try 
+			for(int j = 0; j < 10; j++)
 			{
-				images.add(ImageIO.read(new File("images/hunterWest.png")));
-			}
-			catch(IOException err)
-			{
-				err.printStackTrace();
+				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
 			}
 		}
-		else{
-			try 
-			{
-				images.add(ImageIO.read(new File("images/darkRoom.png")));
-			}
-			catch(IOException err)
-			{
-				err.printStackTrace();
-			}
-		}
-		JLabel empty = new JLabel(new ImageIcon(images.get(i)));
-		graphicalView.add(empty);
-		}
+		System.out.println(hunterLoc.toString());
+		//JLabel empty = new JLabel(new ImageIcon(images.get(i)));
+		//graphicalView.add(empty);
+		
 		
 		textView = new JPanel();
 		textView.setBackground(Color.WHITE);
@@ -135,13 +129,77 @@ public class wumpusGUI extends JFrame
 		gameViewPanel = new JPanel();
 		gameViewPanel.setPreferredSize(new Dimension(640, 650));
 		gameViewPanel.add(gameView);
+		
+		upButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('u');
+			}
+		});
+		
+		downButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('d');
+			}
+		});
+		
+		leftButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('l');
+			}
+		});
+		
+		rightButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('r');
+			}
+		});
+		
+		fireButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('a');
+			}
+		});
 
 		add(buttons);
-		add(gameViewPanel);
-		
-	
-				
+		add(gameViewPanel);		
 
 		setVisible(true);
+	}
+
+	@Override
+	public void update(Observable o, Object obj)
+	{
+		System.out.println("moving in direction: " + game.getDir());
+		gameView.remove(graphicalView);
+		gameView.remove(textView);
+		graphicalView = new JPanel();
+		//graphicalView.setPreferredSize(new Dimension(640, 640));
+		graphicalView.setBackground(Color.BLACK);
+		graphicalView.setLayout(new GridLayout(10, 10));
+	
+		for(int i = 0; i < 10; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
+			}
+		}
+		gameView.add("Graphic", graphicalView);
+		gameView.add("Text", textView);
 	}
 }

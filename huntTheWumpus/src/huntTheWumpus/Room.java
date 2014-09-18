@@ -7,6 +7,14 @@
 
 package huntTheWumpus;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 public class Room 
 {
 	private boolean blood;
@@ -177,5 +185,63 @@ public class Room
 		if(bat)
 			return true;
 		return false;
+	}
+	
+	public JLabel getImage()
+	{
+		if(explored)
+			if(hunter)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
+			}
+			else if(vArrow)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
+			}
+			else if(hArrow)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
+			}
+			else if(wumpus)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/wumpus.png")));
+			}
+			else if(pit)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/slimePit.png")));
+			}
+			else if(blood)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/bloodyRoom.png")));
+			}
+			else if(slime)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/slimyRoom.png")));
+			}
+			else if(goop)
+			{
+				return new JLabel(new ImageIcon(tryImage("images/goopyRoom.png")));
+			}
+			else
+			{
+				return new JLabel(new ImageIcon(tryImage("images/emptyRoom.png")));
+			}
+		else
+		{
+			return new JLabel(new ImageIcon(tryImage("images/darkRoom.png")));
+		}
+	}
+	
+	private BufferedImage tryImage(String url)
+	{
+		try 
+		{
+			return ImageIO.read(new File(url));
+		}
+		catch(IOException err)
+		{
+			err.printStackTrace();
+		}
+		return null;
 	}
 }

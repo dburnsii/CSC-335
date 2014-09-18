@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.util.Observable;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -23,7 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-public class Game extends JFrame
+public class Game extends Observable
 {
 	
 	private static Map gameMap; //ALL PUBLIC VARIABLES ARE USED ONLY FOR JUNIT TESTING (Would not appear in real game)
@@ -33,6 +34,7 @@ public class Game extends JFrame
 	private static boolean gameWon;
 	private static Hunter hunter;
 	private wumpusGUI gui;
+	private char dir;
 
 	
 	public static void main(String[] args) throws IOException
@@ -54,8 +56,8 @@ public class Game extends JFrame
 		char movement;
 		int roomMessageCode;
 		
-		gui = new wumpusGUI(gameMap.getHunterLocation());
-
+		gui = new wumpusGUI(gameMap, this);
+		this.addObserver(gui);
 //		// This prints the 'graphic' for the game, before it starts
 //		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); 
 //		System.out.println("xx|  |XX|  |x|  |xx|  |x|  \\xx|  |x|       |xxx|        |x|  |XX|  |x|   ___|xx");
@@ -232,6 +234,52 @@ public class Game extends JFrame
 			}
 	}
 
+	public void buttonPress(char dir)
+	{
+		this.dir = dir;
+		switch (dir)
+		{
+		case 'u':
+			hunter.moveUp();
+			gameMap.updateHunter(hunter.getPosition());
+			break;
+		case 'd':
+			hunter.moveDown();
+			gameMap.updateHunter(hunter.getPosition());
+			break;
+		case 'l':
+			hunter.moveLeft();
+			gameMap.updateHunter(hunter.getPosition());
+			break;
+		case 'r':
+			hunter.moveRight();
+			gameMap.updateHunter(hunter.getPosition());
+			break;
+		case 'a':
+			gameMap.initialArrow(hunter.getPosition());
+			while (gameMap.animateArrow(hunter.getOrientation())) //animates the arrow before resolving the result
+			{
+				System.out.print(gameMap.toString());
+				wait(100);
+			}
+			gameOver = true;
+			gameWon = gameMap.updateArrow(hunter.shootArrow(),
+					hunter.getPosition());
+			break;
+		default:
+			System.out
+					.println("Not a valid key, try again. Pick either u,d,l,r, or a.");
+		}
+		System.out.println(hunter.getPosition().toString());
+		setChanged();
+		notifyObservers();
+	}
+	
+	public char getDir()
+	{
+		return dir;
+	}
+	
 
 	// A simplified delay timer, so that the
 	// try/catch doesn't have to take up

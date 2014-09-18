@@ -1,0 +1,196 @@
+package huntTheWumpus;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+public class wumpusGUI extends JFrame implements Observer
+{
+	private JPanel graphicalView;
+	private JPanel textView;
+	private JPanel buttons;
+	private JPanel movementButtons;
+	private JPanel arrowButtons;
+	private JPanel gameViewPanel;
+	private JTabbedPane gameView;
+	private GridLayout movementButtonsLayout;
+	private JButton upButton;
+	private JButton downButton;
+	private JButton rightButton;
+	private JButton leftButton;
+	private JButton fireButton;
+	private ImageIcon[][] graphicMap;
+	private Game game;
+	private Map gameMap;
+	
+
+	public wumpusGUI(Map gameMap, final Game game)
+	{
+		setTitle("Hunt the Wumpus");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new FlowLayout());
+		this.gameMap =gameMap;
+		this.game = game;
+		
+		gameView = new JTabbedPane();
+
+		setSize(1000, 700);
+		graphicalView = new JPanel();
+		//graphicalView.setPreferredSize(new Dimension(640, 640));
+		graphicalView.setBackground(Color.BLACK);
+		graphicalView.setLayout(new GridLayout(10, 10));
+		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+		Point hunterLoc = gameMap.getHunterLocation();
+		for(int i = 0; i < 10; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
+			}
+		}
+		System.out.println(hunterLoc.toString());
+		//JLabel empty = new JLabel(new ImageIcon(images.get(i)));
+		//graphicalView.add(empty);
+		
+		
+		textView = new JPanel();
+		textView.setBackground(Color.WHITE);
+		buttons = new JPanel();
+		buttons.setPreferredSize(new Dimension(320, 640));
+		movementButtonsLayout = new GridLayout(0, 3);
+
+		JPanel sudoPanel = new JPanel();
+		sudoPanel.setPreferredSize(new Dimension(300, 200));
+
+		buttons.add(sudoPanel);
+
+		movementButtons = new JPanel();
+		movementButtons.setPreferredSize(new Dimension(320, 200));
+		movementButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10,
+				10));
+		movementButtons.setLayout(movementButtonsLayout);
+
+		movementButtons.add(new JLabel(""));
+
+		upButton = new JButton();
+		upButton.setSize(20, 20);
+		upButton.setText("^");
+		movementButtons.add(upButton);
+
+		movementButtons.add(new JLabel(""));
+
+		leftButton = new JButton();
+		leftButton.setSize(20, 20);
+		leftButton.setText("<");
+		movementButtons.add(leftButton);
+
+		downButton = new JButton();
+		downButton.setSize(20, 20);
+		downButton.setText("v");
+		movementButtons.add(downButton);
+
+		rightButton = new JButton();
+		rightButton.setSize(20, 20);
+		rightButton.setText(">");
+		movementButtons.add(rightButton);
+
+		buttons.add(movementButtons);
+
+		arrowButtons = new JPanel();
+		arrowButtons.setPreferredSize(new Dimension(100, 100));
+		fireButton = new JButton();
+		fireButton.setText("FIRE!!!!");
+		fireButton.setPreferredSize(new Dimension(90, 90));
+		arrowButtons.add(fireButton);
+		buttons.add(arrowButtons);
+
+		gameView.add("Graphic", graphicalView);
+		gameView.add("Text", textView);
+		gameView.setPreferredSize(new Dimension(640, 640));
+		gameViewPanel = new JPanel();
+		gameViewPanel.setPreferredSize(new Dimension(640, 650));
+		gameViewPanel.add(gameView);
+		
+		upButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('u');
+			}
+		});
+		
+		downButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('d');
+			}
+		});
+		
+		leftButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('l');
+			}
+		});
+		
+		rightButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('r');
+			}
+		});
+		
+		fireButton.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				game.buttonPress('a');
+			}
+		});
+
+		add(buttons);
+		add(gameViewPanel);		
+
+		setVisible(true);
+	}
+
+	@Override
+	public void update(Observable o, Object obj)
+	{
+		System.out.println("moving in direction: " + game.getDir());
+		for(int i = 0; i < 10; i++)
+		{
+			for(int j = 0; j < 10; j++)
+			{
+				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
+			}
+		}
+	}
+}
