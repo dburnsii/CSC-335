@@ -7,10 +7,23 @@
 
 package huntTheWumpus;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Game
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+public class Game extends JFrame
 {
 	
 	private static Map gameMap; //ALL PUBLIC VARIABLES ARE USED ONLY FOR JUNIT TESTING (Would not appear in real game)
@@ -19,8 +32,15 @@ public class Game
 	private static boolean gameOver;
 	private static boolean gameWon;
 	private static Hunter hunter;
+	private wumpusGUI gui;
+
 	
 	public static void main(String[] args) throws IOException
+	{
+		new Game();
+	}
+	
+	public Game()
 	{
 		gameMap = new Map();
 		hunter = new Hunter(gameMap.getHunterLocation());
@@ -33,45 +53,47 @@ public class Game
 		Scanner key = new Scanner(System.in);
 		char movement;
 		int roomMessageCode;
-
-		// This prints the 'graphic' for the game, before it starts
-		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); 
-		System.out.println("xx|  |XX|  |x|  |xx|  |x|  \\xx|  |x|       |xxx|        |x|  |XX|  |x|   ___|xx");
-		System.out.println("xx|  |xx|  |x|  |xx|  |x|   \\x|  |x|       |xxx|        |x|  |XX|  |x|  |xxxxxx");
-		System.out.println("xx|        |x|  |xx|  |x|    \\|  |xxx|   |xxxxxxxx|   |xxx|        |x|   __|xxx");
-		System.out.println("xx|   __   |x|  |xx|  |x|  |\\    |xxx|   |xxxxxxxx|   |xxx|   __   |x|  |xxxxxx");
-		System.out.println("xx|  |xx|  |x|        |x|  |x\\   |xxx|   |xxxxxxxx|   |xxx|  |xx|  |x|      |xx");
-		System.out.println("xx|__|xx|__|xx\\______/xx|__|xx\\__|xxx|___|xxxxxxxx|___|xxx|__|xx|__|x|______|xx");
-		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-		System.out.println("xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxx");
-		System.out.println("xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxx");
-		System.out.println("xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxx");
-		System.out.println("xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxx");
-		System.out.println("xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxx");
-		System.out.println("xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxx");
-		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n");
-
-		// The description of the game, and instructions
-		String desc = "You are a brave hunter searching for the elusive wumpus in a cave containing" 
-				+ "\nbottomless pits and warped space-time properties. Slime is one square away"
-				+ "\nfrom the pits, blood is up to 2 squares away from the wumpus. Goo is the "
-				+ "\nmixture of both. You only have one arrow to shoot, if you miss you are dead."
-				+ "\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, \nand 'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
 		
-		// Makes the characters of the
-		// description appear on the
-		// screen like an rpg, rather
-		// than just showing up
-		for (int i = 0; i < desc.length(); i++) 
-		{
-			System.out.print(desc.charAt(i));
-			wait(50); // Delay between character prints
-		}
+		gui = new wumpusGUI(gameMap.getHunterLocation());
 
-		key.nextLine(); // Forces the player to press enter to play
-		textMap = gameMap.toString(); // Prints initial map layout
-		System.out.print(textMap);
+//		// This prints the 'graphic' for the game, before it starts
+//		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); 
+//		System.out.println("xx|  |XX|  |x|  |xx|  |x|  \\xx|  |x|       |xxx|        |x|  |XX|  |x|   ___|xx");
+//		System.out.println("xx|  |xx|  |x|  |xx|  |x|   \\x|  |x|       |xxx|        |x|  |XX|  |x|  |xxxxxx");
+//		System.out.println("xx|        |x|  |xx|  |x|    \\|  |xxx|   |xxxxxxxx|   |xxx|        |x|   __|xxx");
+//		System.out.println("xx|   __   |x|  |xx|  |x|  |\\    |xxx|   |xxxxxxxx|   |xxx|   __   |x|  |xxxxxx");
+//		System.out.println("xx|  |xx|  |x|        |x|  |x\\   |xxx|   |xxxxxxxx|   |xxx|  |xx|  |x|      |xx");
+//		System.out.println("xx|__|xx|__|xx\\______/xx|__|xx\\__|xxx|___|xxxxxxxx|___|xxx|__|xx|__|x|______|xx");
+//		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+//		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+//		System.out.println("xxxx|  |x^x|  |xx|  |xx|  |xxx/\\xxxxx/\\xxx|      \\xxx|  |xx|  |xxx/     \\xxxxxx");
+//		System.out.println("xxxx|  |/ \\|  |xx|  |xx|  |xx/  \\xxx/  \\xx|  |x|  |xx|  |xx|  |xx|  /x\\__|xxxxx");
+//		System.out.println("xxxx|         |xx|  |xx|  |xx|   \\x/   |xx|  |x|  |xx|  |xx|  |xxx\\___ \\xxxxxxx");
+//		System.out.println("xxxx|    /\\   |xx|  |xx|  |xx|    v    |xx|   ___/xxx|  |xx|  |xxxxxxx\\ \\xxxxxx");
+//		System.out.println("xxxxx\\  /xx\\  /xx|  |xx|  |xx|  |\\ /|  |xx|  |xxxxxxx|  |xx|  |xx| \\xx/  |xxxxx");
+//		System.out.println("xxxxxx\\/xxxx\\/xxxx\\______/xxx|  |xvx|  |xx|__|xxxxxxxx\\______/xxxx\\_____/xxxxxx");
+//		System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n");
+//
+//		// The description of the game, and instructions
+//		String desc = "You are a brave hunter searching for the elusive wumpus in a cave containing" 
+//				+ "\nbottomless pits and warped space-time properties. Slime is one square away"
+//				+ "\nfrom the pits, blood is up to 2 squares away from the wumpus. Goo is the "
+//				+ "\nmixture of both. You only have one arrow to shoot, if you miss you are dead."
+//				+ "\n\nPress 'u' to move up, 'd' to move down, 'r' to move right, 'l' to move left, \nand 'a' to shoot your arrow. Good luck!\n\n\nPress Enter to play.\n\n";
+//		
+//		// Makes the characters of the
+//		// description appear on the
+//		// screen like an rpg, rather
+//		// than just showing up
+//		for (int i = 0; i < desc.length(); i++) 
+//		{
+//			System.out.print(desc.charAt(i));
+//			wait(50); // Delay between character prints
+//		}
+//
+//		key.nextLine(); // Forces the player to press enter to play
+//		textMap = gameMap.toString(); // Prints initial map layout
+//		System.out.print(textMap);
 
 		while (!gameOver)
 		{
@@ -197,8 +219,20 @@ public class Game
 					.println("You lost, you shot yourself in the back with your arrow!");
 		}
 	}
-
 	
+	private void drawMap()
+	{
+		
+		for(int i = 0; i < 10; i++)
+			for(int j = 0; j < 10; j++)
+			{
+				
+				ImageIcon empty = new ImageIcon("images/EmptyRoom.png");
+				
+			}
+	}
+
+
 	// A simplified delay timer, so that the
 	// try/catch doesn't have to take up
 	// space.
