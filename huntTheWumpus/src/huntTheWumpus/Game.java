@@ -12,6 +12,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Scanner;
@@ -43,7 +45,6 @@ public class Game extends Observable
 	private String textViewMap;
 	private String roomMessageString;
 
-	
 	public static void main(String[] args) throws IOException
 	{
 		new Game();
@@ -60,7 +61,6 @@ public class Game extends Observable
 		wumpusDeath = false;
 		buttonPressed = false;
 		arrowDeath = false;
-		String textMap;
 		//Scanner key = new Scanner(System.in);
 		char movement;
 		int roomMessageCode;
@@ -214,7 +214,6 @@ public class Game extends Observable
 		{
 			gameOver = true;
 			gameMap.clearFog();
-			textMap = gameMap.toString();
 			textViewMap = gameMap.toString();
 			//System.out.print(textMap);
 			System.out.println("You have fallen into a bottomless pit!! Enviornmental damage too stronk!");
@@ -226,7 +225,6 @@ public class Game extends Observable
 		{
 			gameOver = true;
 			gameMap.clearFog();
-			textMap = gameMap.toString();
 			textViewMap = gameMap.toString();
 			//System.out.print(textMap);
 			System.out
@@ -240,7 +238,6 @@ public class Game extends Observable
 		if (gameWon)
 		{
 			gameMap.clearFog();
-			textMap = gameMap.toString();
 			//System.out.print(textMap);
 			System.out
 					.println("You won! One shot, one kill, no luck, all skill.");
@@ -250,7 +247,6 @@ public class Game extends Observable
 		if (!gameWon && !wumpusDeath && !pitDeath)
 		{
 			gameMap.clearFog();
-			textMap = gameMap.toString();
 			arrowDeath = true;
 			System.out
 					.println("You lost, you shot yourself in the back with your arrow!");
@@ -318,11 +314,6 @@ public class Game extends Observable
 		case 'a':
 			buttonPressed = true;
 			gameMap.initialArrow(hunter.getPosition());
-//			while (gameMap.animateArrow(hunter.getOrientation())) //animates the arrow before resolving the result
-//			{
-//				//System.out.print(gameMap.toString());
-//				wait(100);
-//			}
 			gameOver = true;
 			gameWon = gameMap.updateArrow(hunter.shootArrow(),
 					hunter.getPosition());
@@ -331,7 +322,7 @@ public class Game extends Observable
 			System.out
 					.println("Not a valid key, try again. Pick either u,d,l,r, or a.");
 		}
-		//System.out.println(hunter.getPosition().toString());
+		
 		checkDeath();
 		setChanged();
 		notifyObservers();
@@ -389,5 +380,4 @@ public class Game extends Observable
 			e.printStackTrace();
 		}
 	}
-
 }

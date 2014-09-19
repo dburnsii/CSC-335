@@ -29,7 +29,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class wumpusGUI extends JFrame implements Observer
+public class wumpusGUI extends JFrame implements Observer, KeyListener
 {
 	private JPanel graphicalView;
 	private JPanel textView;
@@ -46,12 +46,13 @@ public class wumpusGUI extends JFrame implements Observer
 	private JButton rightButton;
 	private JButton leftButton;
 	private JButton fireButton;
+	private ImageIcon[][] graphicMap;
 	private Game game;
 	private Map gameMap;
 	
+
 	public wumpusGUI(Map gameMap, final Game game)
 	{
-		setFocusable(true);
 		setTitle("Hunt the Wumpus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
@@ -62,8 +63,11 @@ public class wumpusGUI extends JFrame implements Observer
 
 		setSize(1000, 700);
 		graphicalView = new JPanel();
+		//graphicalView.setPreferredSize(new Dimension(640, 640));
 		graphicalView.setBackground(Color.BLACK);
 		graphicalView.setLayout(new GridLayout(10, 10));
+		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+		Point hunterLoc = gameMap.getHunterLocation();
 		for(int i = 0; i < 10; i++)
 		{
 			for(int j = 0; j < 10; j++)
@@ -76,9 +80,16 @@ public class wumpusGUI extends JFrame implements Observer
 		textViewField.setFont(new Font("monospaced", Font.BOLD, 35));
 		textViewField.setPreferredSize(new Dimension(640, 500));
 		textViewField.setText(game.getTextViewMap());
+		System.out.println(game.getTextViewMap());
 		textView.setBackground(Color.WHITE);
 		textView.add(textViewField);
-
+		System.out.println(hunterLoc.toString());
+		//JLabel empty = new JLabel(new ImageIcon(images.get(i)));
+		//graphicalView.add(empty);
+		
+		
+		//textView = new JPanel();
+		//textView.setBackground(Color.WHITE);
 		roomMessageLabel = new JLabel();
 		buttons = new JPanel();
 		buttons.setPreferredSize(new Dimension(320, 640));
@@ -91,7 +102,8 @@ public class wumpusGUI extends JFrame implements Observer
 
 		movementButtons = new JPanel();
 		movementButtons.setPreferredSize(new Dimension(320, 200));
-		movementButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		movementButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10,
+				10));
 		movementButtons.setLayout(movementButtonsLayout);
 
 		movementButtons.add(new JLabel(""));
@@ -135,10 +147,20 @@ public class wumpusGUI extends JFrame implements Observer
 		gameViewPanel.setPreferredSize(new Dimension(640, 650));
 		gameViewPanel.add(gameView);
 		
+		
+		//Peter's additions a jtextarea and a label, not working yet
+		//textViewField = new JTextArea();
+		//textViewField.setText(game.getTextViewMap());
+		//textViewField.setFont(new Font("monospaced", Font.BOLD, 18));
+		//textView.add(textViewField);
+		
 		roomMessageLabel.setText("default");
 		roomMessageLabel.setAlignmentY(BOTTOM_ALIGNMENT);
 		gameViewPanel.add(roomMessageLabel);
-
+		
+		
+		
+		
 		upButton.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -193,6 +215,7 @@ public class wumpusGUI extends JFrame implements Observer
 	@Override
 	public void update(Observable o, Object obj)
 	{
+		System.out.println("moving in direction: " + game.getDir());
 		if(game.getGameOver())
 		{
 			upButton.setEnabled(false);
@@ -222,6 +245,7 @@ public class wumpusGUI extends JFrame implements Observer
 		gameView.remove(textView);
 		gameView.remove(roomMessageLabel);
 		graphicalView = new JPanel();
+		//graphicalView.setPreferredSize(new Dimension(640, 640));
 		graphicalView.setBackground(Color.BLACK);
 		graphicalView.setLayout(new GridLayout(10, 10));
 	
@@ -232,7 +256,6 @@ public class wumpusGUI extends JFrame implements Observer
 				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
 			}
 		}
-		
 		textView = new JPanel();
 		textViewField = new JTextArea(game.getTextViewMap());
 		textViewField.setFont(new Font("monospaced", Font.BOLD, 35));
@@ -244,5 +267,29 @@ public class wumpusGUI extends JFrame implements Observer
 		gameView.add("Text", textView);
 		textView.add(roomMessageLabel);
 		gameView.setSelectedIndex(currentView);
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent event)
+	{
+		if(event.getKeyCode() == KeyEvent.VK_UP)
+		{
+			game.buttonPress('u');
+		}
+		System.out.println("got something: " + KeyEvent.VK_UP + " " + event.getKeyCode());
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
