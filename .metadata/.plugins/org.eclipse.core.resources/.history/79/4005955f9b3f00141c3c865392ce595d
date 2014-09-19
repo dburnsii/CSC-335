@@ -253,7 +253,7 @@ public class Game extends Observable
 			break;
 		case 'r':
 			hunter.moveRight();
-			gameMap.updateHunter(hunter.getPosition(), 'r');
+			gameMap.updateHunter(hunter.getPosition() 'r');
 			break;
 		case 'a':
 			gameMap.initialArrow(hunter.getPosition());

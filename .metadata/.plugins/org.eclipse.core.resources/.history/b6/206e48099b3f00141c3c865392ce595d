@@ -164,19 +164,19 @@ public class Game extends Observable
 				{
 				case 'u':
 					hunter.moveUp();
-					gameMap.updateHunter(hunter.getPosition() , 'u');
+					gameMap.updateHunter(hunter.getPosition());
 					break;
 				case 'd':
 					hunter.moveDown();
-					gameMap.updateHunter(hunter.getPosition(), 'd');
+					gameMap.updateHunter(hunter.getPosition());
 					break;
 				case 'l':
 					hunter.moveLeft();
-					gameMap.updateHunter(hunter.getPosition(), 'l');
+					gameMap.updateHunter(hunter.getPosition());
 					break;
 				case 'r':
 					hunter.moveRight();
-					gameMap.updateHunter(hunter.getPosition(), 'r');
+					gameMap.updateHunter(hunter.getPosition());
 					break;
 				case 'a':
 					gameMap.initialArrow(hunter.getPosition());
@@ -241,19 +241,19 @@ public class Game extends Observable
 		{
 		case 'u':
 			hunter.moveUp();
-			gameMap.updateHunter(hunter.getPosition(), 'u');
+			gameMap.updateHunter(hunter.getPosition());
 			break;
 		case 'd':
 			hunter.moveDown();
-			gameMap.updateHunter(hunter.getPosition() , 'd');
+			gameMap.updateHunter(hunter.getPosition());
 			break;
 		case 'l':
 			hunter.moveLeft();
-			gameMap.updateHunter(hunter.getPosition() , 'l');
+			gameMap.updateHunter(hunter.getPosition());
 			break;
 		case 'r':
 			hunter.moveRight();
-			gameMap.updateHunter(hunter.getPosition(), 'r');
+			gameMap.updateHunter(hunter.getPosition());
 			break;
 		case 'a':
 			gameMap.initialArrow(hunter.getPosition());

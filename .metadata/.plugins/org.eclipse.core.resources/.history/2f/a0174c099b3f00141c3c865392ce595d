@@ -10,14 +10,12 @@ package huntTheWumpus;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public class Room
+public class Room 
 {
 	private boolean blood;
 	private boolean slime;
@@ -29,7 +27,6 @@ public class Room
 	private boolean pit;
 	private boolean vArrow;
 	private boolean hArrow;
-	private char hunterDir;
 	
 	Room()
 	{
@@ -195,20 +192,7 @@ public class Room
 		if(explored)
 			if(hunter)
 			{
-				switch(hunterDir)
-				{
-				case 'u': 
-					return new JLabel(new ImageIcon(tryImage("images/hunterNorth.png")));
-				case 'd':
-					return new JLabel(new ImageIcon(tryImage("images/hunterSouth.png")));
-				case 'l':
-					return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
-				case 'r':
-					return new JLabel(new ImageIcon(tryImage("images/hunterEast.png")));
-				default:
-					return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
-					
-				}
+				return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
 			}
 			else if(vArrow)
 			{
@@ -248,11 +232,6 @@ public class Room
 		}
 	}
 	
-	public void setDir(char dir)
-	{
-		hunterDir = dir;
-	}
-	
 	private BufferedImage tryImage(String url)
 	{
 		try 
@@ -265,5 +244,4 @@ public class Room
 		}
 		return null;
 	}
-
 }
