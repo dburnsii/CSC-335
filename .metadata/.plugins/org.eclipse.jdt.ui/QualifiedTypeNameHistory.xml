@@ -20,4 +20,6 @@
 <fullyQualifiedTypeName name="java.awt.image.BufferedImage"/>
 <fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
 <fullyQualifiedTypeName name="java.util.Observer"/>
+<fullyQualifiedTypeName name="huntTheWumpus.Map"/>
+<fullyQualifiedTypeName name="huntTheWumpus.Hunter"/>
 </qualifiedTypeNameHistroy>

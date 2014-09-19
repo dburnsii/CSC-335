@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Scanner;
@@ -21,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -28,13 +30,18 @@ public class Game extends Observable
 {
 	
 	private static Map gameMap; //ALL PUBLIC VARIABLES ARE USED ONLY FOR JUNIT TESTING (Would not appear in real game)
-	private static boolean pitDeath;
-	private static boolean wumpusDeath;
-	private static boolean gameOver;
-	private static boolean gameWon;
+	private boolean pitDeath;
+	private boolean wumpusDeath;
+	private boolean gameOver;
+	private boolean gameWon;
+	private boolean buttonPressed;
+	private boolean checkedForDeath;
+	private boolean arrowDeath;
 	private static Hunter hunter;
 	private wumpusGUI gui;
 	private char dir;
+	private String textViewMap;
+	private String roomMessageString;
 
 	
 	public static void main(String[] args) throws IOException
@@ -51,10 +58,13 @@ public class Game extends Observable
 		gameWon = false;
 		pitDeath = false;
 		wumpusDeath = false;
+		buttonPressed = false;
+		arrowDeath = false;
 		String textMap;
-		Scanner key = new Scanner(System.in);
+		//Scanner key = new Scanner(System.in);
 		char movement;
 		int roomMessageCode;
+		textViewMap = gameMap.toString();
 		
 		gui = new wumpusGUI(gameMap, this);
 		this.addObserver(gui);
@@ -99,52 +109,37 @@ public class Game extends Observable
 
 		while (!gameOver)
 		{
+			textViewMap = gameMap.toString();
 			// If the player has fallen in a pit, clear the fog
 			// and let them know
-			if (pitDeath)
-			{
-				gameOver = true;
-				gameMap.clearFog();
-				textMap = gameMap.toString();
-				System.out.print(textMap);
-				System.out.println("You have fallen into a bottomless pit!! Enviornmental damage too stronk!");
-				break;
-			} 
-			// If the player has run into the Wumpus,
-			// clear the fog and let them know
-			else if (wumpusDeath) 
-			{
-				gameOver = true;
-				gameMap.clearFog();
-				textMap = gameMap.toString();
-				System.out.print(textMap);
-				System.out
-						.println("You come face to face with the Wumpus and barely have time to panic\n"
-								+ "before it rips you to pieces!");
-				break;
-			} else
 			// Since the player is "safe", tell them where they are
-			{
+
 				roomMessageCode = gameMap.roomMessage();
 				switch (roomMessageCode)
 				{
 				case 0:
 					System.out.println("You are in an empty room.");
+					roomMessageString = "You are in an empty room.";
 					break;
 				case 1:
 					System.out.println("You are in a room filled with blood.");
+					roomMessageString = "You are in a room filled with blood.";
 					break;
 				case 2:
 					System.out.println("You are in a room filled with goop.");
+					roomMessageString = "You are in a room filled with goop.";
 					break;
 				case 3:
 					System.out.println("You are in a room filled with slime.");
+					roomMessageString = "You are in a room filled with slime.";
 					break;
 				case 4:
 					pitDeath = true;
+					gameOver = true;
 					break;
 				case 5:
 					wumpusDeath = true;
+					gameOver = true;
 					break;
 				case 6:
 					//Not used in this version
@@ -152,10 +147,24 @@ public class Game extends Observable
 					break;
 				}
 
+			buttonPressed = false;
+			checkedForDeath = false;
+			
+			while(!buttonPressed && !gameOver){
+				
+				// if statement so that we do not check over and over and create lag
+				if(!checkedForDeath)
+				{
+				checkDeath(); //See if player walked into a pit or a wumpus on last move
+				checkedForDeath = true;
+				}
+				//do nothing and wait until button is pressed
+				//System.out.print("."); //test purposes
 			}
+			System.out.println("\nYou moved!"); //for testing purposes
 			
 			// If the player is still alive, ask them where they want to go
-			if (!pitDeath && !wumpusDeath) 
+			/*if (!pitDeath && !wumpusDeath) 
 			{
 				System.out.println("You are facing " + hunter.getOrientation());
 				System.out.println("Where would you like to move?");
@@ -196,17 +205,43 @@ public class Game extends Observable
 			}
 
 			textMap = gameMap.toString();
-			System.out.print(textMap);
+			System.out.print(textMap); */
 		}
 
-		key.close();
+		//key.close();
+		
+		if (pitDeath)
+		{
+			gameOver = true;
+			gameMap.clearFog();
+			textMap = gameMap.toString();
+			textViewMap = gameMap.toString();
+			//System.out.print(textMap);
+			System.out.println("You have fallen into a bottomless pit!! Enviornmental damage too stronk!");
+			roomMessageString = "You have fallen into a bottomless pit!! Enviornmental damage too stronk!";
+		} 
+			// If the player has run into the Wumpus,
+			// clear the fog and let them know
+		if (wumpusDeath) 
+		{
+			gameOver = true;
+			gameMap.clearFog();
+			textMap = gameMap.toString();
+			textViewMap = gameMap.toString();
+			//System.out.print(textMap);
+			System.out
+					.println("You come face to face with the Wumpus and barely have time to panic\n"
+								+ "before it rips you to pieces!");
+			roomMessageString = "You come face to face with the Wumpus and it rips you to pieces!!";
+			
+		}
 
 		//Player has won, time to celebrate!!
 		if (gameWon)
 		{
 			gameMap.clearFog();
 			textMap = gameMap.toString();
-			System.out.print(textMap);
+			//System.out.print(textMap);
 			System.out
 					.println("You won! One shot, one kill, no luck, all skill.");
 		}
@@ -216,52 +251,78 @@ public class Game extends Observable
 		{
 			gameMap.clearFog();
 			textMap = gameMap.toString();
-			System.out.print(textMap);
+			arrowDeath = true;
 			System.out
 					.println("You lost, you shot yourself in the back with your arrow!");
 		}
 	}
 	
+	
 	private void drawMap()
 	{
 		
-		for(int i = 0; i < 10; i++)
-			for(int j = 0; j < 10; j++)
+		for(int i = 0; i < Map.vertSize; i++)
+			for(int j = 0; j < Map.horizSize; j++)
 			{
 				
 				ImageIcon empty = new ImageIcon("images/EmptyRoom.png");
 				
 			}
 	}
+	
+	private void checkDeath(){
+		for(int i = 0; i < Map.vertSize; i++)
+			for(int j = 0; j < Map.horizSize; j++)
+			{
+				if(gameMap.getRoom(new Point(i,j)).containsPit() && (i == hunter.getPosition().x) && (j == hunter.getPosition().y))
+				{
+					pitDeath = true;
+					gameOver = true;
+				}
+				if(gameMap.getRoom(new Point(i,j)).containsWumpus() && (i == hunter.getPosition().x) && (j == hunter.getPosition().y))
+				{
+					wumpusDeath = true;
+					gameOver = true;
+				}
+			}
+	}
+	
 
 	public void buttonPress(char dir)
 	{
+		
+		
 		this.dir = dir;
 		switch (dir)
 		{
 		case 'u':
+			buttonPressed = true;
 			hunter.moveUp();
 			gameMap.updateHunter(hunter.getPosition(), 'u');
 			break;
 		case 'd':
+			buttonPressed = true;
 			hunter.moveDown();
 			gameMap.updateHunter(hunter.getPosition() , 'd');
 			break;
 		case 'l':
+			buttonPressed = true;
 			hunter.moveLeft();
 			gameMap.updateHunter(hunter.getPosition() , 'l');
 			break;
 		case 'r':
+			buttonPressed = true;
 			hunter.moveRight();
 			gameMap.updateHunter(hunter.getPosition(), 'r');
 			break;
 		case 'a':
+			buttonPressed = true;
 			gameMap.initialArrow(hunter.getPosition());
-			while (gameMap.animateArrow(hunter.getOrientation())) //animates the arrow before resolving the result
-			{
-				System.out.print(gameMap.toString());
-				wait(100);
-			}
+//			while (gameMap.animateArrow(hunter.getOrientation())) //animates the arrow before resolving the result
+//			{
+//				//System.out.print(gameMap.toString());
+//				wait(100);
+//			}
 			gameOver = true;
 			gameWon = gameMap.updateArrow(hunter.shootArrow(),
 					hunter.getPosition());
@@ -270,7 +331,8 @@ public class Game extends Observable
 			System.out
 					.println("Not a valid key, try again. Pick either u,d,l,r, or a.");
 		}
-		System.out.println(hunter.getPosition().toString());
+		//System.out.println(hunter.getPosition().toString());
+		checkDeath();
 		setChanged();
 		notifyObservers();
 	}
@@ -281,6 +343,39 @@ public class Game extends Observable
 	}
 	
 
+	public String getTextViewMap(){
+		return textViewMap;
+	}
+	
+	public String getRoomMessageString(){
+		return roomMessageString;
+	}
+	
+	public boolean getGameOver()
+	{
+		return gameOver;
+	}
+	
+	public boolean getWon()
+	{
+		return gameWon;
+	}
+	
+	public boolean getWumpusDeath()
+	{
+		return wumpusDeath;
+	}
+	
+	public boolean getPitDeath()
+	{
+		return pitDeath;
+	}
+	
+	public boolean getArrowDeath()
+	{
+		return arrowDeath;
+	}
+	
 	// A simplified delay timer, so that the
 	// try/catch doesn't have to take up
 	// space.

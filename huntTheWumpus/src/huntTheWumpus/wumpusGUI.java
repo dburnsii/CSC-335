@@ -3,6 +3,7 @@ package huntTheWumpus;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -20,8 +21,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class wumpusGUI extends JFrame implements Observer
 {
@@ -32,6 +36,8 @@ public class wumpusGUI extends JFrame implements Observer
 	private JPanel arrowButtons;
 	private JPanel gameViewPanel;
 	private JTabbedPane gameView;
+	private JTextArea textViewField;
+	private JLabel roomMessageLabel;
 	private GridLayout movementButtonsLayout;
 	private JButton upButton;
 	private JButton downButton;
@@ -48,7 +54,7 @@ public class wumpusGUI extends JFrame implements Observer
 		setTitle("Hunt the Wumpus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new FlowLayout());
-		this.gameMap =gameMap;
+		this.gameMap = gameMap;
 		this.game = game;
 		
 		gameView = new JTabbedPane();
@@ -67,13 +73,22 @@ public class wumpusGUI extends JFrame implements Observer
 				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
 			}
 		}
+		textView = new JPanel();
+		textViewField = new JTextArea();
+		textViewField.setFont(new Font("monospaced", Font.BOLD, 35));
+		textViewField.setPreferredSize(new Dimension(640, 500));
+		textViewField.setText(game.getTextViewMap());
+		System.out.println(game.getTextViewMap());
+		textView.setBackground(Color.WHITE);
+		textView.add(textViewField);
 		System.out.println(hunterLoc.toString());
 		//JLabel empty = new JLabel(new ImageIcon(images.get(i)));
 		//graphicalView.add(empty);
 		
 		
-		textView = new JPanel();
-		textView.setBackground(Color.WHITE);
+		//textView = new JPanel();
+		//textView.setBackground(Color.WHITE);
+		roomMessageLabel = new JLabel();
 		buttons = new JPanel();
 		buttons.setPreferredSize(new Dimension(320, 640));
 		movementButtonsLayout = new GridLayout(0, 3);
@@ -130,6 +145,20 @@ public class wumpusGUI extends JFrame implements Observer
 		gameViewPanel.setPreferredSize(new Dimension(640, 650));
 		gameViewPanel.add(gameView);
 		
+		
+		//Peter's additions a jtextarea and a label, not working yet
+		//textViewField = new JTextArea();
+		//textViewField.setText(game.getTextViewMap());
+		//textViewField.setFont(new Font("monospaced", Font.BOLD, 18));
+		//textView.add(textViewField);
+		
+		roomMessageLabel.setText("default");
+		roomMessageLabel.setAlignmentY(BOTTOM_ALIGNMENT);
+		gameViewPanel.add(roomMessageLabel);
+		
+		
+		
+		
 		upButton.addActionListener(new ActionListener() 
 		{
 			@Override
@@ -185,8 +214,34 @@ public class wumpusGUI extends JFrame implements Observer
 	public void update(Observable o, Object obj)
 	{
 		System.out.println("moving in direction: " + game.getDir());
+		if(game.getGameOver())
+		{
+			upButton.setEnabled(false);
+			downButton.setEnabled(false);
+			rightButton.setEnabled(false);
+			leftButton.setEnabled(false);
+			fireButton.setEnabled(false);
+			if(game.getPitDeath())
+			{
+				JOptionPane.showMessageDialog(this, "You fell to your death!");
+			}
+			if(game.getWumpusDeath())
+			{
+				JOptionPane.showMessageDialog(this, "The Wumpus devoured you!!");
+			}
+			if(game.getArrowDeath())
+			{
+				JOptionPane.showMessageDialog(this, "You shot yourself in the back with an arrow!");
+			}
+			if(game.getWon())
+			{
+				JOptionPane.showMessageDialog(this, "You slayed the Wumpus! Congrats!!");
+			}
+		}
+		int currentView = gameView.getSelectedIndex();
 		gameView.remove(graphicalView);
 		gameView.remove(textView);
+		gameView.remove(roomMessageLabel);
 		graphicalView = new JPanel();
 		//graphicalView.setPreferredSize(new Dimension(640, 640));
 		graphicalView.setBackground(Color.BLACK);
@@ -199,7 +254,16 @@ public class wumpusGUI extends JFrame implements Observer
 				graphicalView.add(gameMap.getRoom(new Point(i, j)).getImage());
 			}
 		}
+		textView = new JPanel();
+		textViewField = new JTextArea(game.getTextViewMap());
+		textViewField.setFont(new Font("monospaced", Font.BOLD, 35));
+		textViewField.setPreferredSize(new Dimension(640, 500));
+		textView.setBackground(Color.WHITE);
+		textView.add(textViewField);
+		roomMessageLabel = new JLabel(game.getRoomMessageString());
 		gameView.add("Graphic", graphicalView);
 		gameView.add("Text", textView);
+		textView.add(roomMessageLabel);
+		gameView.setSelectedIndex(currentView);
 	}
 }

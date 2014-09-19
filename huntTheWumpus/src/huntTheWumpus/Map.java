@@ -226,6 +226,7 @@ public class Map
 		if(direction == "East" || direction == "West")
 			if( hunterPosition.x == wumpus.x)
 				return true;
+		map[hunterPosition.x][hunterPosition.y].enableShotHimself();
 		return false;
 	}
 

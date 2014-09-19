@@ -29,6 +29,7 @@ public class Room
 	private boolean pit;
 	private boolean vArrow;
 	private boolean hArrow;
+	private boolean shotHimself;
 	private char hunterDir;
 	
 	Room()
@@ -123,6 +124,11 @@ public class Room
 		hArrow = false;
 	}
 	
+	public void enableShotHimself()
+	{
+		shotHimself = true;
+	}
+	
 	public String toString() //Generates the letter that represents the room
 	{
 		if(explored)
@@ -195,19 +201,78 @@ public class Room
 		if(explored)
 			if(hunter)
 			{
+				if(shotHimself)
+				{
+					return new JLabel(new ImageIcon(tryImage("images/hunterShotHimself.png")));
+				}
+				if(pit)
+				{
+					return new JLabel(new ImageIcon(tryImage("images/hunterFellIn.png")));
+				}
+				if(wumpus)
+				{
+					return new JLabel(new ImageIcon(tryImage("images/hunterGotAte.png")));
+				}
+				if(goop)
+				{
+					switch(hunterDir)
+					{
+						case 'u': 
+							return new JLabel(new ImageIcon(tryImage("images/goopyRoomHunterNorth.png")));
+						case 'd':
+							return new JLabel(new ImageIcon(tryImage("images/goopyRoomHunterSouth.png")));
+						case 'l':
+							return new JLabel(new ImageIcon(tryImage("images/goopyRoomHunterWest.png")));
+						case 'r':
+							return new JLabel(new ImageIcon(tryImage("images/goopyRoomHunterEast.png")));
+						default:
+							return new JLabel(new ImageIcon(tryImage("images/goopyRoomHunterWest.png")));
+					}
+				}
+				if(slime)
+				{
+					switch(hunterDir)
+					{
+						case 'u': 
+							return new JLabel(new ImageIcon(tryImage("images/slimyRoomHunterNorth.png")));
+						case 'd':
+							return new JLabel(new ImageIcon(tryImage("images/slimyRoomHunterSouth.png")));
+						case 'l':
+							return new JLabel(new ImageIcon(tryImage("images/slimyRoomHunterWest.png")));
+						case 'r':
+							return new JLabel(new ImageIcon(tryImage("images/slimyRoomHunterEast.png")));
+						default:
+							return new JLabel(new ImageIcon(tryImage("images/slimyRoomHunterWest.png")));
+					}
+				}
+				if(blood)
+				{
+					switch(hunterDir)
+					{
+						case 'u': 
+							return new JLabel(new ImageIcon(tryImage("images/bloodyRoomHunterNorth.png")));
+						case 'd':
+							return new JLabel(new ImageIcon(tryImage("images/bloodyRoomHunterSouth.png")));
+						case 'l':
+							return new JLabel(new ImageIcon(tryImage("images/bloodyRoomHunterWest.png")));
+						case 'r':
+							return new JLabel(new ImageIcon(tryImage("images/bloodyRoomHunterEast.png")));
+						default:
+							return new JLabel(new ImageIcon(tryImage("images/bloodyRoomHunterWest.png")));
+					}
+				}
 				switch(hunterDir)
 				{
-				case 'u': 
-					return new JLabel(new ImageIcon(tryImage("images/hunterNorth.png")));
-				case 'd':
-					return new JLabel(new ImageIcon(tryImage("images/hunterSouth.png")));
-				case 'l':
-					return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
-				case 'r':
-					return new JLabel(new ImageIcon(tryImage("images/hunterEast.png")));
-				default:
-					return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
-					
+					case 'u': 
+						return new JLabel(new ImageIcon(tryImage("images/hunterNorth.png")));
+					case 'd':
+						return new JLabel(new ImageIcon(tryImage("images/hunterSouth.png")));
+					case 'l':
+						return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
+					case 'r':
+						return new JLabel(new ImageIcon(tryImage("images/hunterEast.png")));
+					default:
+						return new JLabel(new ImageIcon(tryImage("images/hunterWest.png")));
 				}
 			}
 			else if(vArrow)
